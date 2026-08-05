@@ -3,6 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
   <title>Leyendas y Misterios</title>
 
   <style>
@@ -14,62 +15,239 @@
       margin: 0;
       min-height: 100vh;
       background: #171312;
+      font-family: Arial, sans-serif;
+      color: white;
+    }
+
+    .libro {
+      width: 100%;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 20px 12px;
+    }
+
+    .visor {
+      width: 100%;
       display: flex;
       justify-content: center;
       align-items: center;
-      font-family: Arial, sans-serif;
     }
 
-    .pagina {
-      display: none;
-      width: 100%;
-      text-align: center;
-    }
-
-    .pagina.activa {
-      display: block;
-    }
-
-    .pagina img {
+    .visor img {
       display: block;
       width: 100%;
       max-width: 900px;
       height: auto;
-      margin: 0 auto;
+      object-fit: contain;
+      box-shadow: 0 10px 35px rgba(0, 0, 0, 0.45);
+    }
+
+    .controles {
+      width: 100%;
+      max-width: 900px;
+      margin-top: 18px;
+      display: grid;
+      grid-template-columns: 1fr auto 1fr;
+      align-items: center;
+      gap: 10px;
+    }
+
+    button {
+      border: 1px solid rgba(255, 255, 255, 0.35);
+      background: rgba(255, 255, 255, 0.08);
+      color: white;
+      padding: 12px 18px;
+      border-radius: 999px;
+      font-size: 16px;
       cursor: pointer;
     }
 
-    .indicacion {
-      color: white;
-      margin: 14px 0 25px;
-      font-size: 16px;
+    button:hover {
+      background: rgba(255, 255, 255, 0.16);
+    }
+
+    button:disabled {
+      opacity: 0.35;
+      cursor: not-allowed;
+    }
+
+    .anterior {
+      justify-self: start;
+    }
+
+    .siguiente {
+      justify-self: end;
+    }
+
+    .contador {
+      font-size: 15px;
+      white-space: nowrap;
+      opacity: 0.9;
+    }
+
+    .inicio {
+      margin-top: 12px;
+      background: transparent;
+      border: none;
+      text-decoration: underline;
+      padding: 6px 10px;
+      font-size: 14px;
+    }
+
+    @media (max-width: 600px) {
+      .libro {
+        padding: 10px 6px 18px;
+      }
+
+      .controles {
+        margin-top: 12px;
+      }
+
+      button {
+        padding: 10px 12px;
+        font-size: 14px;
+      }
+
+      .contador {
+        font-size: 13px;
+      }
     }
   </style>
 </head>
 
 <body>
 
-  <div id="presentacion" class="pagina activa">
-    <img
-      src="./Leyendas.png?v=3"
-      alt="Presentación de Leyendas y Misterios"
-      onclick="mostrarVitre()"
-    >
-    <div class="indicacion">Pulsa la imagen para comenzar</div>
-  </div>
+  <main class="libro">
 
-  <div id="vitre" class="pagina">
-    <img
-      src="./vitremisterios.png?v=3"
-      alt="Leyendas y misterios de Vitré"
-    >
-  </div>
+    <div class="visor">
+      <img
+        id="pagina"
+        src="./Leyendas.png"
+        alt="Leyendas y Misterios"
+      >
+    </div>
+
+    <div class="controles">
+      <button
+        id="botonAnterior"
+        class="anterior"
+        onclick="paginaAnterior()"
+      >
+        ← Anterior
+      </button>
+
+      <div id="contador" class="contador">
+        Página 1 de 2
+      </div>
+
+      <button
+        id="botonSiguiente"
+        class="siguiente"
+        onclick="paginaSiguiente()"
+      >
+        Siguiente →
+      </button>
+    </div>
+
+    <button class="inicio" onclick="irAlInicio()">
+      Volver a la presentación
+    </button>
+
+  </main>
 
   <script>
-    function mostrarVitre() {
-      document.getElementById("presentacion").classList.remove("activa");
-      document.getElementById("vitre").classList.add("activa");
+    const paginas = [
+      {
+        archivo: "Leyendas.png",
+        titulo: "Presentación de Leyendas y Misterios"
+      },
+      {
+        archivo: "vitremisterios.png",
+        titulo: "Leyendas y misterios de Vitré"
+      }
+    ];
+
+    let paginaActual = 0;
+
+    const imagen = document.getElementById("pagina");
+    const contador = document.getElementById("contador");
+    const botonAnterior = document.getElementById("botonAnterior");
+    const botonSiguiente = document.getElementById("botonSiguiente");
+
+    function mostrarPagina() {
+      const pagina = paginas[paginaActual];
+
+      imagen.src = "./" + pagina.archivo + "?v=" + Date.now();
+      imagen.alt = pagina.titulo;
+
+      contador.textContent =
+        "Página " + (paginaActual + 1) + " de " + paginas.length;
+
+      botonAnterior.disabled = paginaActual === 0;
+      botonSiguiente.disabled = paginaActual === paginas.length - 1;
+
+      window.scrollTo({
+        top: 0,
+        behavior: "smooth"
+      });
     }
+
+    function paginaAnterior() {
+      if (paginaActual > 0) {
+        paginaActual--;
+        mostrarPagina();
+      }
+    }
+
+    function paginaSiguiente() {
+      if (paginaActual < paginas.length - 1) {
+        paginaActual++;
+        mostrarPagina();
+      }
+    }
+
+    function irAlInicio() {
+      paginaActual = 0;
+      mostrarPagina();
+    }
+
+    document.addEventListener("keydown", function(evento) {
+      if (evento.key === "ArrowLeft") {
+        paginaAnterior();
+      }
+
+      if (evento.key === "ArrowRight") {
+        paginaSiguiente();
+      }
+
+      if (evento.key === "Home") {
+        irAlInicio();
+      }
+    });
+
+    let inicioToque = 0;
+
+    document.addEventListener("touchstart", function(evento) {
+      inicioToque = evento.changedTouches[0].screenX;
+    }, { passive: true });
+
+    document.addEventListener("touchend", function(evento) {
+      const finalToque = evento.changedTouches[0].screenX;
+      const distancia = finalToque - inicioToque;
+
+      if (distancia > 60) {
+        paginaAnterior();
+      }
+
+      if (distancia < -60) {
+        paginaSiguiente();
+      }
+    }, { passive: true });
+
+    mostrarPagina();
   </script>
 
 </body>
