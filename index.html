@@ -269,16 +269,17 @@
       imagen.alt = pagina.titulo;
       audioAmbiente.pause();
 audioAmbiente.currentTime = 0;
+audioAmbiente.removeAttribute("src");
+audioAmbiente.load();
 
 if (pagina.audio) {
   audioAmbiente.src = "./" + pagina.audio;
   audioAmbiente.volume = 0.45;
+  audioAmbiente.load();
 
   audioAmbiente.play().catch(function() {
     console.log("El navegador espera una interacción para reproducir el audio.");
   });
-} else {
-  audioAmbiente.removeAttribute("src");
 }
 
       contador.textContent =
