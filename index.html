@@ -121,7 +121,7 @@
 <body>
 
   <main class="libro">
-
+    <audio id="audioAmbiente" loop preload="auto"></audio>
     <div class="visor">
       <img
         id="pagina"
@@ -257,6 +257,7 @@
     let paginaActual = 0;
 
     const imagen = document.getElementById("pagina");
+    const audioAmbiente = document.getElementById("audioAmbiente");
     const contador = document.getElementById("contador");
     const botonAnterior = document.getElementById("botonAnterior");
     const botonSiguiente = document.getElementById("botonSiguiente");
@@ -266,6 +267,19 @@
 
       imagen.src = "./" + pagina.archivo + "?v=" + Date.now();
       imagen.alt = pagina.titulo;
+      audioAmbiente.pause();
+audioAmbiente.currentTime = 0;
+
+if (pagina.audio) {
+  audioAmbiente.src = "./" + pagina.audio;
+  audioAmbiente.volume = 0.45;
+
+  audioAmbiente.play().catch(function() {
+    console.log("El navegador espera una interacción para reproducir el audio.");
+  });
+} else {
+  audioAmbiente.removeAttribute("src");
+}
 
       contador.textContent =
         "Página " + (paginaActual + 1) + " de " + paginas.length;
