@@ -3,7 +3,6 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
   <title>Leyendas y Misterios</title>
 
   <style>
@@ -13,23 +12,65 @@
 
     body {
       margin: 0;
+      min-height: 100vh;
       background: #171312;
       display: flex;
       justify-content: center;
       align-items: center;
-      min-height: 100vh;
+      font-family: Arial, sans-serif;
     }
 
-    img {
+    .pagina {
+      display: none;
+      width: 100%;
+      text-align: center;
+    }
+
+    .pagina.activa {
+      display: block;
+    }
+
+    .pagina img {
       display: block;
       width: 100%;
       max-width: 900px;
       height: auto;
+      margin: 0 auto;
+      cursor: pointer;
+    }
+
+    .indicacion {
+      color: white;
+      margin: 14px 0 25px;
+      font-size: 16px;
     }
   </style>
 </head>
 
 <body>
-<img src="./Leyendas.png?v=2" alt="Presentación de Leyendas y Misterios">
+
+  <div id="presentacion" class="pagina activa">
+    <img
+      src="./Leyendas.png?v=3"
+      alt="Presentación de Leyendas y Misterios"
+      onclick="mostrarVitre()"
+    >
+    <div class="indicacion">Pulsa la imagen para comenzar</div>
+  </div>
+
+  <div id="vitre" class="pagina">
+    <img
+      src="./vitremisterios.png?v=3"
+      alt="Leyendas y misterios de Vitré"
+    >
+  </div>
+
+  <script>
+    function mostrarVitre() {
+      document.getElementById("presentacion").classList.remove("activa");
+      document.getElementById("vitre").classList.add("activa");
+    }
+  </script>
+
 </body>
 </html>
